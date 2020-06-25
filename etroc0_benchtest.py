@@ -16,7 +16,6 @@ from scipy.optimize import curve_fit
 from scipy.stats import norm
 import scipy.stats
 
-tdc_bin = 5e-3  ## in ns
 
 def normalizeY(points):
     scale = points[np.argmax(np.abs(points))]
@@ -451,7 +450,7 @@ def plot_times(t_ch1, t_ch2, t_ch3, std_t1, std_t2, std_t3, mean_t1, mean_t2, me
 
 
 def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd_ratio=0.5, transCond=4.4e3, trigger_ch1 = -0.03, trigger_ch2 = -0.03,
-                         trigger_ch3 = -0.03, trigger_sat = -0.25, pedestal_length = 400, signal_end = 800):
+                        trigger_ch3 = -0.03, trigger_sat = -0.25, pedestal_length = 400, signal_end = 800):
     file = path + file_in
     data, attrs = extract_dataset(file)
     events_t = attrs['readout_size']
@@ -487,9 +486,9 @@ def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd
     events_t = events_ch1
     time = x*dt*1e9
     
-#     print('plot raw waveforms',file_index,'of',file_num)
-#     plot_waveforms(time,y_ch1, y_ch2, y_ch3, y_ch4, pic=False, pdf=False)
-    
+    #     print('plot raw waveforms',file_index,'of',file_num)
+    #     plot_waveforms(time,y_ch1, y_ch2, y_ch3, y_ch4, pic=False, pdf=False)
+        
     ####### apply software trigger  ############
 
     v_pk_raw_ch1 = [np.min(y_ch1[event][pedestal_length:signal_end]) for event in range (0,events_t)]
@@ -528,12 +527,12 @@ def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd
             item = item + 1
     
     print('plot soft-triggered waveforms', file_index,'of',file_num)
-#     plot_waveform(time, y_soft_trigger_ch1, xlable="Time(ns)", ylable="Voltage(V)", 
-#                   title="ch1 waveform with soft trigger", pdf=False, pic=False)
-#     plot_waveform(time, y_soft_trigger_ch2, xlable="Time(ns)", ylable="Voltage(V)", 
-#                   title="ch1 waveform with soft trigger", pdf=False, pic=False)
-#     plot_waveform(time, y_soft_trigger_ch3, xlable="Time(ns)", ylable="Voltage(V)", 
-#                   title="ch1 waveform with soft trigger", pdf=False, pic=False)
+    #     plot_waveform(time, y_soft_trigger_ch1, xlable="Time(ns)", ylable="Voltage(V)", 
+    #                   title="ch1 waveform with soft trigger", pdf=False, pic=False)
+    #     plot_waveform(time, y_soft_trigger_ch2, xlable="Time(ns)", ylable="Voltage(V)", 
+    #                   title="ch1 waveform with soft trigger", pdf=False, pic=False)
+    #     plot_waveform(time, y_soft_trigger_ch3, xlable="Time(ns)", ylable="Voltage(V)", 
+    #                   title="ch1 waveform with soft trigger", pdf=False, pic=False)
     print('plot soft-triggered waveforms done', file_index,'of',file_num)
     
     #### deal with amplitude and charge for cut data#############################
@@ -557,9 +556,9 @@ def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd
     plot_charges(q_ch1, q_ch2, q_ch3,  pic=False, pdf=False, num_bins=50, range_q=(0,30))
     #### deal with time#############################
     print('begin to calculate time', file_index,'of',file_num)
-#     t_ch1, std_t_ch1, mean_t_ch1 = calculate_time(v_ch1_shift, time, th_cfd=0.5, tdc_bin=0.005, tdc_start = 45)
-#     t_ch2, std_t_ch2, mean_t_ch2 = calculate_time(v_ch2_shift, time, th_cfd=0.5, tdc_bin=0.005, tdc_start = 45)
-#     t_ch3, std_t_ch3, mean_t_ch3 = calculate_time(v_ch3_shift, time, th_cfd=0.5, tdc_bin=0.005, tdc_start = 45)
+    #     t_ch1, std_t_ch1, mean_t_ch1 = calculate_time(v_ch1_shift, time, th_cfd=0.5, tdc_bin=0.005, tdc_start = 45)
+    #     t_ch2, std_t_ch2, mean_t_ch2 = calculate_time(v_ch2_shift, time, th_cfd=0.5, tdc_bin=0.005, tdc_start = 45)
+    #     t_ch3, std_t_ch3, mean_t_ch3 = calculate_time(v_ch3_shift, time, th_cfd=0.5, tdc_bin=0.005, tdc_start = 45)
     
     t_ch1, std_t_ch1, mean_t_ch1 = calculate_time_cfd1(v_ch1_shift, time, cfd_dly=1, cfd_gain = 0.5, tdc_bin=0.005, 
                                                        tdc_start = 52, title_plot='ch1 cfd', pic=True, pdf = False)
@@ -569,8 +568,8 @@ def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd
                                                        tdc_start = 52, title_plot='ch3 cfd', pic=True, pdf = False)
     print('calculate time done', file_index,'of',file_num)
     
-#     plot_times(t_ch1, t_ch2, t_ch3, std_t_ch1, std_t_ch2, std_t_ch3, mean_t_ch1, mean_t_ch2, mean_t_ch3,
-#                    pic=False, pdf=False, num_bins=40, range_t=None)
+    #     plot_times(t_ch1, t_ch2, t_ch3, std_t_ch1, std_t_ch2, std_t_ch3, mean_t_ch1, mean_t_ch2, mean_t_ch3,
+    #                    pic=False, pdf=False, num_bins=40, range_t=None)
     
     ############### delta t32  ########################
     t32 = [0]*event_soft_triger
@@ -578,9 +577,9 @@ def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd
         t32[elem] = t_ch3[elem]-t_ch2[elem]
         
     
-#     std_t32 = np.std(t32)
-#     std_t32 = std_t32 * 1e3  ## to pico second
-#     mean_t32 = np.mean(t32)
+    #     std_t32 = np.std(t32)
+    #     std_t32 = std_t32 * 1e3  ## to pico second
+    #     mean_t32 = np.mean(t32)
     
     mean_t32, std_t32 = norm.fit(t32)
     std_t32 = std_t32 * 1e3  ## to pico second
@@ -590,9 +589,9 @@ def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd
         t31[elem] = t_ch3[elem]-t_ch1[elem]
         
     
-#     std_t31 = np.std(t31)
-#     std_t31 = std_t31 * 1e3  ## to pico second
-#     mean_t31 = np.mean(t31)
+    #     std_t31 = np.std(t31)
+    #     std_t31 = std_t31 * 1e3  ## to pico second
+    #     mean_t31 = np.mean(t31)
     
     mean_t31, std_t31 = norm.fit(t31)
     std_t31 = std_t31 * 1e3  ## to pico second
@@ -603,9 +602,9 @@ def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd
         t21[elem] = t_ch2[elem]-t_ch1[elem]
         
     
-#     std_t21 = np.std(t21)
-#     std_t21 = std_t21 * 1e3  ## to pico second
-#     mean_t21 = np.mean(t21)
+    #     std_t21 = np.std(t21)
+    #     std_t21 = std_t21 * 1e3  ## to pico second
+    #     mean_t21 = np.mean(t21)
     
     mean_t21, std_t21 = norm.fit(t21)
     std_t21 = std_t21 * 1e3  ## to pico second
@@ -616,9 +615,9 @@ def analyze_singlePointHV(file_in, path, file_index, file_num, tdc_bin=5e-3, cfd
         t123[elem] = (t_ch1[elem] + t_ch3[elem])/2 - t_ch2[elem]
         
     
-#     std_t123 = np.std(t123)
-#     std_t123 = std_t123 * 1e3  ## to pico second
-#     mean_t123 = np.mean(t123)
+    #     std_t123 = np.std(t123)
+    #     std_t123 = std_t123 * 1e3  ## to pico second
+    #     mean_t123 = np.mean(t123)
     
     mean_t123, std_t123 = norm.fit(t123)
     std_t123 = std_t123 * 1e3  ## to pico second
@@ -773,12 +772,12 @@ def gaus_fit(to_fit, num_bins=50):
     return mean,sigma, popt, pcov
 
 def plot_distribution_time(list_in, file_item, num_bins= 20, range_default = None, xaxis = 'Time Resolution(ns)',
-                          ylable = 'Occurrence', title = 'r$\delta$', pic = False, pdf = True):
+                        ylable = 'Occurrence', title = 'r$\delta$', pic = False, pdf = True):
     entries = len(list_in)
     mu, std = norm.fit(list_in)
     fig, ax4= plt.subplots(dpi=200)
     n,bins,patches=ax4.hist(list_in, bins=num_bins, range=range_default, density=False, 
-                            label = 'entries: %d\nstd:%f\nmean:%f'%(entries, std, mu))
+                            label = 'entries: %d\nstd:%f ns\nmean:%f ns'%(entries, std, mu))
     xmin = np.min(list_in)
     xmax = np.max(list_in)
     x = np.linspace(xmin, xmax, 100)
@@ -793,6 +792,30 @@ def plot_distribution_time(list_in, file_item, num_bins= 20, range_default = Non
     if pic==True:
         plt.show()
     plt.close(fig)
+
+
+def plot_distribution_charge_gaus(list_in, file_item, num_bins= 20, range_default = None, xaxis = 'Time Resolution(ns)',
+                        ylable = 'Occurrence', title = 'r$\delta$', pic = True, pdf = False):
+    entries = len(list_in)
+    mu, std = norm.fit(list_in)
+    fig, ax4= plt.subplots(dpi=200)
+    n,bins,patches=ax4.hist(list_in, bins=num_bins, range=range_default, density=False, 
+                            label = 'entries: %d\nstd:%f fC\nmean:%f fC'%(entries, std, mu))
+    xmin = np.min(list_in)
+    xmax = np.max(list_in)
+    x = np.linspace(xmin, xmax, 100)
+    p = norm.pdf(x, mu, std)
+    ax4.plot(x, np.max(n)*p/np.max(p), 'g', linewidth=2)
+    ax4.grid()
+    ax4.legend()
+    ax4.set(xlabel=xaxis, ylabel='Occurrence',
+               title='Charge Distribution,'+title)
+    if pdf==True:
+        pp.savefig(fig)
+    if pic==True:
+        plt.show()
+    plt.close(fig)
+
 
 def plot_distribution_time_Lindsey(list_in, file_item, num_bins= 20, range_default = None, xaxis = 'Time Resolution(ns)',
                           ylable = 'Occurrence', title = 'r$\delta$', pic = False, pdf = True):
