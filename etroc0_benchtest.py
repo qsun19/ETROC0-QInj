@@ -296,14 +296,33 @@ def calculate_time_qinj_amp(v_in, time, vth=0.5, tdc_bin=0.005, tdc_start = 40):
     for iset in range(eventLen):
         interp_signal[item_num] = InterpolatedUnivariateSpline(time, v_in[item_num])
         item_num = item_num + 1
-           
+    
     t_cross = [0] * eventLen
-    for event in tqdm(range (0,eventLen)):
+    for event in range (0,eventLen):
         t_cross[event] = tdc_start
+        while(interp_signal[event](t_cross[event]) > vth):
+            t_cross[event] = t_cross[event] + tdc_bin*16
+        t_cross[event] = t_cross[event] - tdc_bin*16
+        while(interp_signal[event](t_cross[event]) > vth):
+            t_cross[event] = t_cross[event] + tdc_bin*8
+        t_cross[event] = t_cross[event] - tdc_bin*8
+        while(interp_signal[event](t_cross[event]) > vth):
+            t_cross[event] = t_cross[event] + tdc_bin*4
+        t_cross[event] = t_cross[event] - tdc_bin*4
+        while(interp_signal[event](t_cross[event]) > vth):
+            t_cross[event] = t_cross[event] + tdc_bin*2
+        t_cross[event] = t_cross[event] - tdc_bin*2
         while(interp_signal[event](t_cross[event]) > vth):
             t_cross[event] = t_cross[event] + tdc_bin
     
-    print('t searching is done')
+    
+    #t_cross = [0] * eventLen
+    #for event in tqdm(range (0,eventLen)):
+    #    t_cross[event] = tdc_start
+    #    while(interp_signal[event](t_cross[event]) > vth):
+    #        t_cross[event] = t_cross[event] + tdc_bin
+    
+    print('amp t crossing searching is done')
     std_t_cross = np.std(t_cross)
     std_t_cross = std_t_cross * 1e3       # in pico second
     mean_t_cross = np.mean(t_cross)
@@ -319,11 +338,29 @@ def calculate_time_qinj_trigger(v_in, time, vth=0.5, tdc_bin=0.005, tdc_start = 
            
     t_leading = [0] * eventLen
     
-    for event in tqdm(range (0,eventLen)):
+    for event in range (0,eventLen):
         t_leading[event] = tdc_start
         while(interp_signal[event](t_leading[event]) < vth):
+            t_leading[event] = t_leading[event] + tdc_bin*16
+        t_leading[event] = t_leading[event] - tdc_bin*16
+        while(interp_signal[event](t_leading[event]) < vth):
+            t_leading[event] = t_leading[event] + tdc_bin*8
+        t_leading[event] = t_leading[event] - tdc_bin*8
+        while(interp_signal[event](t_leading[event]) < vth):
+            t_leading[event] = t_leading[event] + tdc_bin*4
+        t_leading[event] = t_leading[event] - tdc_bin*4
+        while(interp_signal[event](t_leading[event]) < vth):
+            t_leading[event] = t_leading[event] + tdc_bin*2
+        t_leading[event] = t_leading[event] - tdc_bin*2
+        while(interp_signal[event](t_leading[event]) < vth):
             t_leading[event] = t_leading[event] + tdc_bin
-    t_trailing = [0] * eventLen
+        
+
+#    for event in tqdm(range (0,eventLen)):
+#        t_leading[event] = tdc_start
+#        while(interp_signal[event](t_leading[event]) < vth):
+#            t_leading[event] = t_leading[event] + tdc_bin
+#    t_trailing = [0] * eventLen
     
     print('trigger crossing searching is done')
     return t_leading
@@ -338,15 +375,52 @@ def calculate_time_qinj_discri(v_in, time, vth=0.5, tdc_bin=0.005, tdc_leading_s
            
     t_leading = [0] * eventLen
     
-    for event in tqdm(range (0,eventLen)):
+    for event in range (0,eventLen):
         t_leading[event] = tdc_leading_start
         while(interp_signal[event](t_leading[event]) < vth):
+            t_leading[event] = t_leading[event] + tdc_bin*16
+        t_leading[event] = t_leading[event] - tdc_bin*16
+        while(interp_signal[event](t_leading[event]) < vth):
+            t_leading[event] = t_leading[event] + tdc_bin*8
+        t_leading[event] = t_leading[event] - tdc_bin*8
+        while(interp_signal[event](t_leading[event]) < vth):
+            t_leading[event] = t_leading[event] + tdc_bin*4
+        t_leading[event] = t_leading[event] - tdc_bin*4
+        while(interp_signal[event](t_leading[event]) < vth):
+            t_leading[event] = t_leading[event] + tdc_bin*2
+        t_leading[event] = t_leading[event] - tdc_bin*2
+        while(interp_signal[event](t_leading[event]) < vth):
             t_leading[event] = t_leading[event] + tdc_bin
+
+    #for event in tqdm(range (0,eventLen)):
+    #    t_leading[event] = tdc_leading_start
+    #    while(interp_signal[event](t_leading[event]) < vth):
+    #        t_leading[event] = t_leading[event] + tdc_bin
+    
     t_trailing = [0] * eventLen
-    for event in tqdm(range (0,eventLen)):
+    
+    for event in range (0,eventLen):
         t_trailing[event] = tdc_trailing_start
         while(interp_signal[event](t_trailing[event]) < vth):
-            t_trailing[event] = t_trailing[event] - tdc_bin
+            t_trailing[event] = t_trailing[event] - tdc_bin*16
+        t_trailing[event] = t_trailing[event] + tdc_bin*16
+        while(interp_signal[event](t_trailing[event]) < vth):
+            t_trailing[event] = t_trailing[event] - tdc_bin*8
+        t_trailing[event] = t_trailing[event] + tdc_bin*8
+        while(interp_signal[event](t_trailing[event]) < vth):
+            t_trailing[event] = t_trailing[event] - tdc_bin*4
+        t_trailing[event] = t_trailing[event] + tdc_bin*4
+        while(interp_signal[event](t_trailing[event]) < vth):
+            t_trailing[event] = t_trailing[event] - tdc_bin*2
+        t_trailing[event] = t_trailing[event] + tdc_bin*2
+        while(interp_signal[event](t_trailing[event]) < vth):
+                t_trailing[event] = t_trailing[event] - tdc_bin
+    
+    
+    #for event in tqdm(range (0,eventLen)):
+    #    t_trailing[event] = tdc_trailing_start
+    #    while(interp_signal[event](t_trailing[event]) < vth):
+    #        t_trailing[event] = t_trailing[event] - tdc_bin
     
     print('discriminator crossing searching is done')
     return t_leading, t_trailing
@@ -370,24 +444,6 @@ def calculate_time_cfd1(v_in, time, cfd_dly=0.1, cfd_gain = 0.5, tdc_bin=0.005, 
         while((interp_signal_scaled[event](t_cfd[event]) + interp_signal_dly[event](t_cfd[event])) < 0):
             t_cfd[event] = t_cfd[event] - tdc_bin
     
-#     tmin = np.min(time)
-#     tmax = np.max(time)
-#     xs = np.linspace(tmin, tmax, 10000)
-    
-#     fig, ax1 = plt.subplots(dpi=200)
-#     for ab in range(0,eventLen):
-#         ax1.plot(xs, interp_signal_scaled[ab](xs) + interp_signal_dly[ab](xs))
-#     ax1.set_xlim(left=48,right=60)
-#     ax1.set_ylim(bottom=-0.20,top=0.20)
-#     ax1.grid()
-#     ax1.set(xlabel='Time(ns)', ylabel='Voltage(V)',
-#            title=title_plot)
-#     if pdf:
-#         pp.savefig(fig)
-#         pp.close()
-#     if pic:
-#         plt.show()
-#     plt.close(fig)
     
     std_t_cfd = np.std(t_cfd)
     std_t_cfd = std_t_cfd * 1e3
