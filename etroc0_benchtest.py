@@ -848,6 +848,30 @@ def plot_distribution_time(list_in, file_item, num_bins= 20, range_default = Non
     if pic==True:
         plt.show()
     plt.close(fig)
+    
+    
+def plot_distribution_time_nofit(list_in, file_item, num_bins= 20, range_default = None, xaxis = 'Time Resolution(ns)',
+                        ylable = 'Occurrence', title = 'r$\delta$', pic = False, pdf = True):
+    entries = len(list_in)
+    mu = np.mean(list_in)
+    std = np.std(list_in)
+    fig, ax4= plt.subplots(dpi=200)
+    n,bins,patches=ax4.hist(list_in, bins=num_bins, range=range_default, density=False, 
+                            label = 'entries: %d\nstd:%f ns\nmean:%f ns'%(entries, std, mu))
+    xmin = np.min(list_in)
+    xmax = np.max(list_in)
+    x = np.linspace(xmin, xmax, 100)
+    p = norm.pdf(x, mu, std)
+    ax4.plot(x, np.max(n)*p/np.max(p), 'g', linewidth=2)
+    ax4.grid()
+    ax4.legend()
+    ax4.set(xlabel='Time Resolution(ns)', ylabel='Occurrence',
+               title=title)
+    if pdf==True:
+        pp.savefig(fig)
+    if pic==True:
+        plt.show()
+    plt.close(fig)
 
 
 def plot_distribution_charge_gaus(list_in, file_item, num_bins= 20, range_default = None, xaxis = 'Time Resolution(ns)',
@@ -976,3 +1000,10 @@ def plot_TWCorrection(toa, tot, popt, t_ch4, toatottitle = 'TOA vs TOT', distriT
     
     plot_distribution_time(t_ch4, 'file_item', num_bins= num_bins, range_default = None, xaxis = 'Time Resolution(ns)',
                           ylable = 'Occurrence', title = distriTitle , pic = pic, pdf = pdf)
+
+
+def func1(x, a, b, c, d):
+    return a + b*(x**1) + c*(x**2) + d*(x**3)
+
+def func0(x, a, b):
+    return a + b*(x**1)
